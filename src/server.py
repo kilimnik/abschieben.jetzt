@@ -77,7 +77,8 @@ class MyServer(BaseHTTPRequestHandler):
             self.end_headers()
 
     def _generate_image(self, who):
-        img = Image.new(mode="RGBA", size=(width, height), color=(255, 255, 255, 255))
+        text_width = int(self.font.getlength(who))
+        img = Image.new(mode="RGBA", size=(width + text_width - 250, height), color=(255, 255, 255, 255))
 
         draw = ImageDraw.Draw(img)
         draw.text((250, 250), who, fill=(0, 0, 0, 255), font=self.font)
