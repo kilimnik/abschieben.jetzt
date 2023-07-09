@@ -1,10 +1,10 @@
+import argparse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from PIL import Image, ImageDraw, ImageFont
 import base64
 from io import BytesIO
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
-hostName = "0.0.0.0"
-serverPort = 8080
 
 width = 800
 height = 400
@@ -84,6 +84,14 @@ class MyServer(BaseHTTPRequestHandler):
         return img
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host", default="0.0.0.0")
+    parser.add_argument("--port", type=int, default=8080)
+    args = parser.parse_args()
+
+    hostName = args.host
+    serverPort = args.port
+
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 
