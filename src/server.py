@@ -1,7 +1,7 @@
 import argparse
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
-import base64
 from io import BytesIO
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -9,15 +9,18 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 width = 800
 height = 400
 
+PATH = Path(__file__).parent
+
 class MyServer(BaseHTTPRequestHandler):
     def setup(self):
         BaseHTTPRequestHandler.setup(self)
         self.request.settimeout(60)
 
-        abschieben = Image.open("src/abschiebung.png")
+        abschieben = Image.open(PATH / "abschiebung.png")
         self.abschieben = abschieben.resize((500,375), Image.Resampling.LANCZOS)
 
-        self.font = ImageFont.truetype("src/XTypewriter-Regular.ttf", size=50)
+        font_path = PATH / "XTypewriter-Regular.ttf"
+        self.font = ImageFont.truetype(str(font_path.resolve()), size=50)
 
     def do_GET(self):
         if self.path == "/":
