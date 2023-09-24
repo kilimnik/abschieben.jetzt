@@ -4,6 +4,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from encodings.idna import ToUnicode
 
 
 width = 800
@@ -58,6 +59,11 @@ class MyServer(BaseHTTPRequestHandler):
         elif self.path.startswith("/img/"):
             img_name = self.path.replace("/img/", "")
             img_name = img_name.replace(".png", "")
+
+            try:
+                img_name = ToUnicode(img_name)
+            except:
+                pass
 
             img = self._generate_image(img_name)
             buffered = BytesIO()
