@@ -18,7 +18,12 @@
         ];
       }));
 
-      overrides = pkgs: pkgs.poetry2nix.overrides.withDefaults (pyself: pysuper: { });
+      overrides = pkgs: pkgs.poetry2nix.overrides.withDefaults (pyself: pysuper: {
+        pilmoji = pysuper.pilmoji.overridePythonAttrs (oldAttrs: {
+          format = "setuptools";
+          prePatch = ''sed -z -i "s/with open('requirements.txt') as fp:\n    requirements = fp.readlines()/requirements=\[\"Pillow\", \"emoji\"\]/" setup.py'';
+        });
+      });
     in
     {
       packages = forAllSystems
@@ -32,10 +37,11 @@
         default = pkgs.${system}.mkShell {
           buildInputs = with pkgs.${system}; [
             poetry
+            zlib
             (pkgs.${system}.poetry2nix.mkPoetryEnv {
               projectDir = ./.;
               overrides = overrides pkgs.${system};
-            #   editablePackageSources = { };
+              #   editablePackageSources = { };
             })
           ];
         };
