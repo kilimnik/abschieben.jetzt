@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from encodings.idna import ToUnicode
+from pilmoji import Pilmoji
 
 
 width = 800
@@ -41,7 +42,7 @@ class MyServer(BaseHTTPRequestHandler):
             title = f"{who} abschieben jetzt"
 
             body = ""
-            
+
             body += f"<html><head>\n"
             body += f'<meta property="og:title" content="{title}"/>\n'
             body += f'<meta property="og:description" content="{title}"/>\n'
@@ -86,7 +87,7 @@ class MyServer(BaseHTTPRequestHandler):
         text_width = int(self.font.getlength(who))
         img = Image.new(mode="RGBA", size=(width + text_width - 250, height), color=(255, 255, 255, 255))
 
-        draw = ImageDraw.Draw(img)
+        draw = Pilmoji(img)
         draw.text((250, 250), who, fill=(0, 0, 0, 255), font=self.font)
 
         img.alpha_composite(self.abschieben, (0, 0))
@@ -114,5 +115,5 @@ def main():
     print("Server stopped.")
 
 
-if __name__ == "__main__":        
+if __name__ == "__main__":
     main()
