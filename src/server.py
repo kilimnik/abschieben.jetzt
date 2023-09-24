@@ -13,13 +13,14 @@ height = 400
 
 PATH = Path(__file__).parent
 
+
 class MyServer(BaseHTTPRequestHandler):
     def setup(self):
         BaseHTTPRequestHandler.setup(self)
         self.request.settimeout(60)
 
         abschieben = Image.open(PATH / "abschiebung.png")
-        self.abschieben = abschieben.resize((500,375), Image.Resampling.LANCZOS)
+        self.abschieben = abschieben.resize((500, 375), Image.Resampling.LANCZOS)
 
         font_path = PATH / "XTypewriter-Regular.ttf"
         self.font = ImageFont.truetype(str(font_path.resolve()), size=50)
@@ -71,7 +72,7 @@ class MyServer(BaseHTTPRequestHandler):
             img.save(buffered, format="PNG")
 
             self.send_response(200)
-            self.send_header('Content-type', 'image/jpeg')
+            self.send_header("Content-type", "image/jpeg")
             self.end_headers()
 
             self.wfile.write(buffered.getvalue())
@@ -87,12 +88,13 @@ class MyServer(BaseHTTPRequestHandler):
         text_width = int(self.font.getlength(who))
         img = Image.new(mode="RGBA", size=(width + text_width - 250, height), color=(255, 255, 255, 255))
 
-        draw = Pilmoji(img)
+        draw = Pilmoji(img, render_discord_emoji=False)
         draw.text((250, 250), who, fill=(0, 0, 0, 255), font=self.font)
 
         img.alpha_composite(self.abschieben, (0, 0))
 
         return img
+
 
 def main():
     parser = argparse.ArgumentParser()
