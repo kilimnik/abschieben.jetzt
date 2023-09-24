@@ -22,7 +22,7 @@ class MyServer(BaseHTTPRequestHandler):
         abschieben = Image.open(PATH / "abschiebung.png")
         self.abschieben = abschieben.resize((500, 375), Image.Resampling.LANCZOS)
 
-        font_path = PATH / "XTypewriter-Regular.ttf"
+        font_path = PATH / "font" / "KurintoType-Rg.ttf"
         self.font = ImageFont.truetype(str(font_path.resolve()), size=50)
 
     def do_GET(self):
@@ -63,7 +63,7 @@ class MyServer(BaseHTTPRequestHandler):
             img_name = img_name.replace(".png", "")
 
             try:
-                img_name = ToUnicode(img_name)
+                img_name = ToUnicode(img_name).upper()
             except:
                 pass
 
